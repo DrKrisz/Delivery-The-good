@@ -12,7 +12,6 @@ public class DeliverySpawner : MonoBehaviour
     void Start()
     {
         SpawnNewDeliveryZone();
-        Invoke(nameof(SpawnNewDeliveryZone), 2.5f);
     }
 
     public void SpawnNewDeliveryZone()

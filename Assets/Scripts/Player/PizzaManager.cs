@@ -70,4 +70,17 @@ public class PizzaManager : MonoBehaviour
         hasPizza = false;
         pizzaDelivered = false;
     }
+
+    public float GetCurrentMoney()
+    {
+        return money;
+    }
+
+    public void RemoveMoney(float amount)
+    {
+        money -= amount;
+        if (money < 0f) money = 0f;
+        UpdateMoneyUI();
+    }
+
 }
