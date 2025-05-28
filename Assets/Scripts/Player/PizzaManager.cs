@@ -8,7 +8,7 @@ public class PizzaManager : MonoBehaviour
     private bool pizzaDelivered = false;
     private GameObject currentPizza;
 
-    private float money = 0f;
+    private float money = 100f;
 
     [Header("References")]
     public Transform pizzaHoldPoint;
@@ -18,16 +18,6 @@ public class PizzaManager : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject == currentPizza && !hasPizza && !pizzaDelivered)
-        {
-            hasPizza = true;
-            Debug.Log("Pizza picked up!");
-
-            currentPizza.transform.SetParent(pizzaHoldPoint);
-            currentPizza.transform.localPosition = Vector3.zero;
-            currentPizza.transform.localRotation = Quaternion.identity;
-        }
-
         if (other.CompareTag("DeliveryZone") && hasPizza)
         {
             hasPizza = false;
@@ -40,7 +30,6 @@ public class PizzaManager : MonoBehaviour
             currentPizza.transform.position = dropPos;
             currentPizza.transform.rotation = dropPoint.rotation;
 
-
             float reward = Random.Range(1.00f, 5.00f);
             reward = Mathf.Round(reward * 100f) / 100f;
             money += reward;
@@ -50,9 +39,9 @@ public class PizzaManager : MonoBehaviour
 
             spawner.Invoke("RespawnPizza", 2.5f);
             deliverySpawner.SpawnNewDeliveryZone();
-
         }
     }
+
 
     void UpdateMoneyUI()
     {
@@ -81,6 +70,23 @@ public class PizzaManager : MonoBehaviour
         money -= amount;
         if (money < 0f) money = 0f;
         UpdateMoneyUI();
+    }
+
+    public void PickedUpPizza(GameObject pizza)
+    {
+        if (pizza == currentPizza && !hasPizza && !pizzaDelivered)
+        {
+            hasPizza = true;
+            pizza.transform.SetParent(pizzaHoldPoint);
+            pizza.transform.localPosition = Vector3.zero;
+            pizza.transform.localRotation = Quaternion.identity;
+            Debug.Log("Pizza picked up!");
+        }
+    }
+
+    public bool HasPizza()
+    {
+        return hasPizza;
     }
 
 }
