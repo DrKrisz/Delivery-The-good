@@ -1,18 +1,33 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
+using System.Collections;
 
 public class Bed : MonoBehaviour
 {
+
+    public Transform playerCamera; // Assign this in Inspector
+    public float lookRange = 3f;   // How far the player can interact
+
     public float cost = 100f;
     public PlayerMovement playerMovement;
     public PizzaManager pizzaManager;
-    public GameObject promptUI; // assign your SleepPromptText object here
+    public GameObject promptUI;
+
+    [Header("Fade UI")]
+    public CanvasGroup fadeCanvas;
+    public float fadeSpeed = 1.5f;
 
     private bool playerInRange = false;
 
     void Update()
     {
-        if (playerInRange && Input.GetKeyDown(KeyCode.E))
+        if (!playerInRange) return;
+
+        bool isLooking = IsLookingAtBed();
+        promptUI.SetActive(isLooking);
+
+        if (isLooking && Input.GetKeyDown(KeyCode.E))
         {
             if (pizzaManager != null && playerMovement != null)
             {
@@ -20,8 +35,7 @@ public class Bed : MonoBehaviour
                 if (money >= cost)
                 {
                     pizzaManager.RemoveMoney(cost);
-                    playerMovement.RestoreEnergy();
-                    Debug.Log("Slept and restored energy!");
+                    StartCoroutine(SleepSequence());
                 }
                 else
                 {
@@ -29,6 +43,47 @@ public class Bed : MonoBehaviour
                 }
             }
         }
+    }
+
+
+    IEnumerator SleepSequence()
+    {
+        // Disable movement and look
+        playerMovement.enabled = false;
+        PlayerLook look = FindObjectOfType<PlayerLook>();
+        if (look != null) look.enabled = false;
+
+        // Fade to black
+        while (fadeCanvas.alpha < 1f)
+        {
+            fadeCanvas.alpha += Time.deltaTime * fadeSpeed;
+            yield return null;
+        }
+
+        // Wait in black screen
+        yield return new WaitForSeconds(1.5f);
+
+        // Restore energy
+        playerMovement.RestoreEnergy();
+
+        // Advance time by 8 hours (16 x 30 minutes)
+        GameClock clock = FindObjectOfType<GameClock>();
+        if (clock != null)
+        {
+            for (int i = 0; i < 16; i++)
+                clock.Advance30Minutes();
+        }
+
+        // Fade back in
+        while (fadeCanvas.alpha > 0f)
+        {
+            fadeCanvas.alpha -= Time.deltaTime * fadeSpeed;
+            yield return null;
+        }
+
+        // Re-enable movement and look
+        playerMovement.enabled = true;
+        if (look != null) look.enabled = true;
     }
 
     void OnTriggerEnter(Collider other)
@@ -48,4 +103,18 @@ public class Bed : MonoBehaviour
             if (promptUI != null) promptUI.SetActive(false);
         }
     }
+
+    bool IsLookingAtBed()
+    {
+        Ray ray = new Ray(playerCamera.position, playerCamera.forward);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, lookRange))
+        {
+            return hit.collider != null && hit.collider.gameObject == gameObject;
+        }
+
+        return false;
+    }
+
 }

@@ -59,6 +59,19 @@ public class PlayerMovement : MonoBehaviour
 
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
+
+        if (energy <= 0f)
+        {
+            energy = 0f;
+
+            PizzaManager manager = FindObjectOfType<PizzaManager>();
+            if (manager != null && !manager.HasPizza()) // Only collapse if NOT holding pizza
+            {
+                GameOverManager go = FindObjectOfType<GameOverManager>();
+                if (go != null)
+                    go.TriggerGameOver();
+            }
+        }
     }
 
     void UpdateEnergyUI()

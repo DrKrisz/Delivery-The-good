@@ -88,5 +88,12 @@ public class PizzaManager : MonoBehaviour
     {
         return hasPizza;
     }
+    
+    public void ClearCurrentPizza()
+    {
+        currentPizza = null;
+        hasPizza = false;
+        pizzaDelivered = false;
+    }
 
 }

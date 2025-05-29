@@ -30,7 +30,7 @@ public class GameClock : MonoBehaviour
         }
     }
 
-    void Advance30Minutes()
+    public void Advance30Minutes()
     {
         currentMinute += 30;
         if (currentMinute >= 60)
