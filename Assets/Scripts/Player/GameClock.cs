@@ -50,4 +50,15 @@ public class GameClock : MonoBehaviour
         string formattedTime = string.Format("{0} {1:00}:{2:00}", daysOfWeek[currentDayIndex], currentHour, currentMinute);
         timeDisplay.text = formattedTime;
     }
+
+    public int GetHour()
+    {
+        return currentHour;
+    }
+
+    public int GetMinute()
+    {
+        return currentMinute;
+    }
+
 }

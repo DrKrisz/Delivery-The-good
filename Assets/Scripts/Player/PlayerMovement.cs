@@ -24,6 +24,10 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 velocity;
     private bool isGrounded;
 
+    [Header("Respawn")]
+    public Transform bedSpawnPoint;
+
+
     void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -71,6 +75,15 @@ public class PlayerMovement : MonoBehaviour
                 if (go != null)
                     go.TriggerGameOver();
             }
+        }
+
+        // Check if player fell into the void
+        if (transform.position.y < -50f)
+        {
+            Debug.LogWarning("Player fell into the void! Respawning at bed.");
+            controller.enabled = false;
+            transform.position = bedSpawnPoint.position;
+            controller.enabled = true;
         }
     }
 
