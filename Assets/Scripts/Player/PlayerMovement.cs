@@ -27,10 +27,19 @@ public class PlayerMovement : MonoBehaviour
     [Header("Respawn")]
     public Transform bedSpawnPoint;
 
+    [Header("Crouch Settings")]
+    public float standingHeight = 2f;
+    public float crouchingHeight = 1.2f;
+    public float crouchSpeed = 3f;
+    public float standingSpeed = 5f;
+    public Transform cameraHolder; // Assign your Main Camera parent (optional)
+
+    private bool isCrouching = false;
 
     void Start()
     {
         controller = GetComponent<CharacterController>();
+        walkSpeed = standingSpeed;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
@@ -85,6 +94,29 @@ public class PlayerMovement : MonoBehaviour
             transform.position = bedSpawnPoint.position;
             controller.enabled = true;
         }
+
+        // Toggle Crouch with 'C'
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            isCrouching = !isCrouching;
+            ApplyCrouch();
+        }
+
+        // Hold Crouch with Left Ctrl
+        if (Input.GetKey(KeyCode.LeftControl))
+        {
+            if (!isCrouching)
+            {
+                isCrouching = true;
+                ApplyCrouch();
+            }
+        }
+        else if (isCrouching && !Input.GetKey(KeyCode.LeftControl))
+        {
+            isCrouching = false;
+            ApplyCrouch();
+        }
+
     }
 
     void UpdateEnergyUI()
@@ -103,4 +135,19 @@ public class PlayerMovement : MonoBehaviour
     {
         return energy;
     }
+
+    void ApplyCrouch()
+    {
+        controller.height = isCrouching ? crouchingHeight : standingHeight;
+        walkSpeed = isCrouching ? crouchSpeed : standingSpeed;
+
+        // Optional: adjust camera height too
+        if (cameraHolder != null)
+        {
+            Vector3 camPos = cameraHolder.localPosition;
+            camPos.y = isCrouching ? 0.4f : 0.7f;
+            cameraHolder.localPosition = camPos;
+        }
+    }
+
 }

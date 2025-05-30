@@ -22,7 +22,7 @@ public class DeliverySpawner : MonoBehaviour
         int index = Random.Range(0, deliveryLocations.Length);
         Vector3 spawnPos = deliveryLocations[index].position + new Vector3(0, 0.1f, 0);
 
-        currentDeliveryZone = Instantiate(deliveryZonePrefab, spawnPos, Quaternion.identity);
+        currentDeliveryZone = Instantiate(deliveryZonePrefab, spawnPos, Quaternion.Euler(0, -90, 0));
         currentDeliveryZone.tag = "DeliveryZone";
 
         currentDeliveryPoint = currentDeliveryZone.transform;
