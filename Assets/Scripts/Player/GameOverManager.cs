@@ -78,9 +78,8 @@ public class GameOverManager : MonoBehaviour
         pizzaManager.RemoveMoney(pizzaManager.GetCurrentMoney()); // $0
         playerMovement.RestoreEnergy(); // 100 energy
 
-        // Reset time
-        for (int i = 0; i < 48; i++) // Reset to Monday 07:00 (full week reset)
-            gameClock.Advance30Minutes();
+        // Reset time completely back to the initial starting day
+        gameClock.ResetTime();
 
         // Respawn player at bed
         player.position = bedSpawnPoint.position + Vector3.up * 1f;
