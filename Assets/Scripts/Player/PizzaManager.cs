@@ -1,5 +1,5 @@
 using UnityEngine;
-using TMPro; // add this at the top
+using TMPro;
 
 
 public class PizzaManager : MonoBehaviour
