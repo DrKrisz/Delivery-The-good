@@ -8,6 +8,11 @@ public class PizzaManager : MonoBehaviour
     private bool pizzaDelivered = false;
     private GameObject currentPizza;
 
+    [Header("Delivery Timer")]
+    public float maxDeliveryTime = 30f; // seconds to deliver before pizza gets cold
+    private float deliveryTimer = 0f;
+    public TMP_Text timerText;
+
     private float money = 100f;
 
     [Header("References")]
@@ -15,6 +20,20 @@ public class PizzaManager : MonoBehaviour
     public DeliverySpawner deliverySpawner;
     public PizzaSpawner spawner;
     public TMP_Text moneyAmountText;
+
+    void Update()
+    {
+        if (hasPizza && deliveryTimer > 0f)
+        {
+            deliveryTimer -= Time.deltaTime;
+            if (deliveryTimer < 0f)
+                deliveryTimer = 0f;
+            UpdateTimerUI();
+
+            if (deliveryTimer <= 0f)
+                HandleExpiredPizza();
+        }
+    }
 
     void OnTriggerEnter(Collider other)
     {
@@ -30,12 +49,17 @@ public class PizzaManager : MonoBehaviour
             currentPizza.transform.position = dropPos;
             currentPizza.transform.rotation = dropPoint.rotation;
 
-            float reward = Random.Range(1.00f, 5.00f);
+            float baseReward = Random.Range(1.00f, 5.00f);
+            float timeFactor = Mathf.Clamp01(deliveryTimer / maxDeliveryTime);
+            float reward = baseReward * timeFactor;
             reward = Mathf.Round(reward * 100f) / 100f;
             money += reward;
 
             Debug.Log($"You earned ${reward}!");
             UpdateMoneyUI();
+
+            deliveryTimer = 0f;
+            UpdateTimerUI();
 
             spawner.Invoke("RespawnPizza", 2.5f);
             deliverySpawner.SpawnNewDeliveryZone();
@@ -46,6 +70,26 @@ public class PizzaManager : MonoBehaviour
     void UpdateMoneyUI()
     {
         moneyAmountText.text = "$ " + money.ToString("F2");
+    }
+
+    void UpdateTimerUI()
+    {
+        if (timerText != null)
+            timerText.text = "Time: " + Mathf.CeilToInt(deliveryTimer).ToString();
+    }
+
+    void HandleExpiredPizza()
+    {
+        if (currentPizza != null)
+            Destroy(currentPizza);
+
+        hasPizza = false;
+        pizzaDelivered = false;
+
+        Debug.Log("Pizza got cold and was discarded!");
+
+        spawner.Invoke("RespawnPizza", 2.5f);
+        deliverySpawner.SpawnNewDeliveryZone();
     }
 
     public void ResetDelivery()
@@ -80,6 +124,8 @@ public class PizzaManager : MonoBehaviour
             pizza.transform.SetParent(pizzaHoldPoint);
             pizza.transform.localPosition = Vector3.zero;
             pizza.transform.localRotation = Quaternion.identity;
+            deliveryTimer = maxDeliveryTime;
+            UpdateTimerUI();
             Debug.Log("Pizza picked up!");
         }
     }
@@ -94,6 +140,8 @@ public class PizzaManager : MonoBehaviour
         currentPizza = null;
         hasPizza = false;
         pizzaDelivered = false;
+        deliveryTimer = 0f;
+        UpdateTimerUI();
     }
 
 }
