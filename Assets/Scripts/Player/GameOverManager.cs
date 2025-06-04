@@ -64,10 +64,6 @@ public class GameOverManager : MonoBehaviour
             pizzaManager.ClearCurrentPizza(); // <--- Put it right here
         }
 
-
-        // Clear pizza state from manager
-        pizzaManager.ClearCurrentPizza(); // <-- use this if you added the method
-
         messageText.text = "You ran out of energy...\nEverything was stolen!";
         messageText.gameObject.SetActive(true);
         yield return new WaitForSeconds(2.5f);
