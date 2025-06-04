@@ -45,6 +45,15 @@ public class GameClock : MonoBehaviour
         }
     }
 
+    // Resets the clock back to the initial starting time
+    public void ResetTime()
+    {
+        currentDayIndex = 0; // Monday
+        currentHour = 7;
+        currentMinute = 0;
+        UpdateTimeDisplay();
+    }
+
     void UpdateTimeDisplay()
     {
         string formattedTime = string.Format("{0} {1:00}:{2:00}", daysOfWeek[currentDayIndex], currentHour, currentMinute);

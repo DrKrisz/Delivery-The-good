@@ -64,10 +64,6 @@ public class GameOverManager : MonoBehaviour
             pizzaManager.ClearCurrentPizza(); // <--- Put it right here
         }
 
-
-        // Clear pizza state from manager
-        pizzaManager.ClearCurrentPizza(); // <-- use this if you added the method
-
         messageText.text = "You ran out of energy...\nEverything was stolen!";
         messageText.gameObject.SetActive(true);
         yield return new WaitForSeconds(2.5f);
@@ -78,9 +74,8 @@ public class GameOverManager : MonoBehaviour
         pizzaManager.RemoveMoney(pizzaManager.GetCurrentMoney()); // $0
         playerMovement.RestoreEnergy(); // 100 energy
 
-        // Reset time
-        for (int i = 0; i < 48; i++) // Reset to Monday 07:00 (full week reset)
-            gameClock.Advance30Minutes();
+        // Reset time completely back to the initial starting day
+        gameClock.ResetTime();
 
         // Respawn player at bed
         player.position = bedSpawnPoint.position + Vector3.up * 1f;
