@@ -109,6 +109,12 @@ public class PizzaManager : MonoBehaviour
         return money;
     }
 
+    public void SetMoney(float amount)
+    {
+        money = amount;
+        UpdateMoneyUI();
+    }
+
     public void RemoveMoney(float amount)
     {
         money -= amount;

@@ -81,6 +81,10 @@ public class Bed : MonoBehaviour
             yield return null;
         }
 
+        SaveSystem system = FindObjectOfType<SaveSystem>();
+        if (system != null)
+            system.SaveGame();
+
         // Re-enable movement and look
         playerMovement.enabled = true;
         if (look != null) look.enabled = true;

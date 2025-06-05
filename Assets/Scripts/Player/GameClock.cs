@@ -70,4 +70,17 @@ public class GameClock : MonoBehaviour
         return currentMinute;
     }
 
+    public int GetDay()
+    {
+        return currentDayIndex;
+    }
+
+    public void SetTime(int dayIndex, int hour, int minute)
+    {
+        currentDayIndex = dayIndex;
+        currentHour = hour;
+        currentMinute = minute;
+        UpdateTimeDisplay();
+    }
+
 }
