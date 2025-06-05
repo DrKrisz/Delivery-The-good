@@ -34,7 +34,12 @@ public class MainMenuManager : MonoBehaviour
         player.SetActive(false); // Hide player control until game starts
 
         playButton.onClick.AddListener(StartGame);
-        quitButton.onClick.AddListener(() => Application.Quit());
+        quitButton.onClick.AddListener(() => {
+            SaveSystem system = FindObjectOfType<SaveSystem>();
+            if (system != null)
+                system.SaveGame();
+            Application.Quit();
+        });
     }
 
     public void StartGame()

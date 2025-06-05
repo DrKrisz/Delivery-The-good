@@ -13,6 +13,9 @@ public class MainMenu : MonoBehaviour
     }
     public void QuitGame()
     {
+        SaveSystem system = FindObjectOfType<SaveSystem>();
+        if (system != null)
+            system.SaveGame();
         Application.Quit();
     }
 

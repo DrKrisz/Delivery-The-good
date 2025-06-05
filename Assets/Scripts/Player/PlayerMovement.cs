@@ -136,6 +136,12 @@ public class PlayerMovement : MonoBehaviour
         return energy;
     }
 
+    public void SetEnergy(float value)
+    {
+        energy = value;
+        UpdateEnergyUI();
+    }
+
     void ApplyCrouch()
     {
         controller.height = isCrouching ? crouchingHeight : standingHeight;
