@@ -9,6 +9,8 @@ public class DeliverySpawner : MonoBehaviour
 
     private GameObject currentDeliveryZone;
 
+    public static event System.Action<Transform> DeliveryZoneSpawned;
+
     void Start()
     {
         SpawnNewDeliveryZone();
@@ -26,5 +28,6 @@ public class DeliverySpawner : MonoBehaviour
         currentDeliveryZone.tag = "DeliveryZone";
 
         currentDeliveryPoint = currentDeliveryZone.transform;
+        DeliveryZoneSpawned?.Invoke(currentDeliveryPoint);
     }
 }
